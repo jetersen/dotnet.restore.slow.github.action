@@ -10,8 +10,12 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
     name: Test
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,6 +30,5 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: dotnet restore
-        shell: cmd
         run: |
           dotnet restore
