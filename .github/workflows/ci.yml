@@ -1,0 +1,30 @@
+name: DotNet
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    name: Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: dotnet restore
+        run: |
+          dotnet restore
