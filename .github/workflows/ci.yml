@@ -19,6 +19,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
+        cache: [true, false]
       fail-fast: false
     steps:
       - name: Checkout
@@ -27,6 +28,7 @@ jobs:
           fetch-depth: 0
 
       - name: Cache NuGet packages
+        if: matrix.cache
         uses: actions/cache@v2
         with:
           path: ~/.nuget/packages
