@@ -2,11 +2,9 @@ name: DotNet
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -22,13 +20,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/cache@v2
+      - name: Cache NuGet packages
+        uses: actions/cache@v2
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+          restore-keys: ${{ runner.os }}-nuget-
 
-      - name: dotnet restore
-        run: |
-          dotnet restore
+      - name: Setup DotNet 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: DotNet restore
+        run: dotnet restore
