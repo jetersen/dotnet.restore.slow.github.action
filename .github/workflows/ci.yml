@@ -6,6 +6,12 @@ on:
   push:
     branches: [main]
 
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  POWERSHELL_TELEMETRY_OPTOUT: 1
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
