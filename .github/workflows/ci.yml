@@ -35,6 +35,14 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
 
+      - name: Setup DotNet 6 Manually
+        if: startsWith(matrix.os, 'windows')
+        shell: pwsh
+        run: |
+          curl.exe -sSfLO https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.100/dotnet-sdk-6.0.100-win-x64.zip
+          mkdir dotnet-sdk-6
+          tar.exe -xf dotnet-sdk-6.0.100-win-x64.zip -C dotnet-sdk-6
+
       - name: Setup DotNet 6
         uses: jetersen/setup-dotnet@fix/usePwsh
         with:
