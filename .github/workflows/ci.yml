@@ -11,6 +11,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   POWERSHELL_TELEMETRY_OPTOUT: 1
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
   build:
@@ -31,17 +32,9 @@ jobs:
         if: matrix.cache
         uses: actions/cache@v2
         with:
-          path: ~/.nuget/packages
+          path: ${{ github.workspace }}/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
-
-      - name: Setup DotNet 6 Manually
-        if: startsWith(matrix.os, 'windows')
-        shell: pwsh
-        run: |
-          curl.exe -sSfLO https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.100/dotnet-sdk-6.0.100-win-x64.zip
-          mkdir dotnet-sdk-6
-          tar.exe -xf dotnet-sdk-6.0.100-win-x64.zip -C dotnet-sdk-6
 
       - name: Setup DotNet 6
         uses: jetersen/setup-dotnet@fix/usePwsh
@@ -49,4 +42,6 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: DotNet restore
-        run: dotnet restore
+        run: |
+          dotnet new nugetconfig
+          dotnet restore -v n
