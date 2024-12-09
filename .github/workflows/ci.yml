@@ -49,6 +49,9 @@ jobs:
             DOTNET_INSTALL_DIR: ''
       fail-fast: false
     steps:
+      - name: Collect Workflow Telemetry
+        uses: catchpoint/workflow-telemetry-action@v2
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
