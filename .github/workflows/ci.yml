@@ -21,6 +21,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-2019, windows-2022]
+        cache: [true, false]
         include:
           - os: windows-2019
             cache: false
@@ -50,7 +51,6 @@ jobs:
           - os: windows-2022
             cache: true
             DOTNET_INSTALL_DIR: ''
-        cache: [true, false]
       fail-fast: false
     steps:
       - name: Checkout
@@ -59,7 +59,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set Windows Environment Variables
-        if: startsWith(matrix.os, 'windows') && matrix.DOTNET_INSTALL_DIR != ''
+        if: ${{ startsWith(matrix.os, 'windows') && matrix.DOTNET_INSTALL_DIR != '' }}
         shell: pwsh
         run: |
           echo "DOTNET_INSTALL_DIR=${{ matrix.DOTNET_INSTALL_DIR }}" >> $ENV:GITHUB_ENV
