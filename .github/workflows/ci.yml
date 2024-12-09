@@ -20,7 +20,7 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2019, windows-2022]
+        os: [ubuntu-latest, macos-latest]
         cache: [true, false]
         include:
           - os: windows-2019
