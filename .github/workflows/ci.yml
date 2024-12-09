@@ -47,6 +47,18 @@ jobs:
           - os: windows-2022
             cache: true
             DOTNET_INSTALL_DIR: ''
+          - os: windows-2019
+            cache: false
+            DOTNET_INSTALL_DIR: 'E:\dotnet'
+          - os: windows-2022
+            cache: false
+            DOTNET_INSTALL_DIR: 'E:\dotnet'
+          - os: windows-2019
+            cache: true
+            DOTNET_INSTALL_DIR: 'E:\dotnet'
+          - os: windows-2022
+            cache: true
+            DOTNET_INSTALL_DIR: 'E:\dotnet'
       fail-fast: false
     steps:
       - name: Collect Workflow Telemetry
@@ -57,12 +69,21 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup ReFS Drive
+        uses: samypr100/setup-dev-drive@v3
+        if: ${{ startsWith(matrix.os, 'windows') && matrix.DOTNET_INSTALL_DIR == 'E:\dotnet' }}
+        with:
+          drive-size: 10GB
+          drive-type: Dynamic
+          drive-path: D:\dev_drive.vhdx
+
       - name: Set Windows Environment Variables
         if: ${{ startsWith(matrix.os, 'windows') && matrix.DOTNET_INSTALL_DIR != '' }}
         shell: pwsh
         run: |
           echo "DOTNET_INSTALL_DIR=${{ matrix.DOTNET_INSTALL_DIR }}" >> $ENV:GITHUB_ENV
-          echo "NUGET_PACKAGES=D:\nuget\packages" >> $ENV:GITHUB_ENV
+          $driveLetter = "${{ matrix.DOTNET_INSTALL_DIR }}"[0]
+          echo "NUGET_PACKAGES=${driveLetter}:\nuget\packages" >> $ENV:GITHUB_ENV
 
       - name: Print matrix values
         run: |
