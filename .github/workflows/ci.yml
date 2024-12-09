@@ -26,19 +26,15 @@ jobs:
           - os: windows-2019
             cache: false
             DOTNET_INSTALL_DIR: D:\dotnet
-            NUGET_PACKAGES: D:\nuget\packages
           - os: windows-2022
             cache: false
             DOTNET_INSTALL_DIR: D:\dotnet
-            NUGET_PACKAGES: D:\nuget\packages
           - os: windows-2019
             cache: true
             DOTNET_INSTALL_DIR: D:\dotnet
-            NUGET_PACKAGES: D:\nuget\packages
           - os: windows-2022
             cache: true
             DOTNET_INSTALL_DIR: D:\dotnet
-            NUGET_PACKAGES: D:\nuget\packages
           - os: windows-2019
             cache: false
             DOTNET_INSTALL_DIR: ''
@@ -63,7 +59,14 @@ jobs:
         shell: pwsh
         run: |
           echo "DOTNET_INSTALL_DIR=${{ matrix.DOTNET_INSTALL_DIR }}" >> $ENV:GITHUB_ENV
-          echo "NUGET_PACKAGES=${{ matrix.NUGET_PACKAGES }}" >> $ENV:GITHUB_ENV
+          echo "NUGET_PACKAGES=D:\nuget\packages" >> $ENV:GITHUB_ENV
+
+      - name: Print matrix values
+        run: |
+          echo "OS: ${{ matrix.os }}"
+          echo "Cache: ${{ matrix.cache }}"
+          echo "DOTNET_INSTALL_DIR: ${{ matrix.DOTNET_INSTALL_DIR }}"
+          echo "NUGET_PACKAGES: ${{ env.NUGET_PACKAGES }}"
 
       - name: Cache NuGet packages
         if: matrix.cache
