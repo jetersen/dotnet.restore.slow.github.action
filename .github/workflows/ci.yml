@@ -51,7 +51,7 @@ jobs:
         if: matrix.cache
         uses: actions/cache@v4
         with:
-          path: ${{ matrix.NUGET_PACKAGES }}
+          path: ${{ env.NUGET_PACKAGES }}
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
 
