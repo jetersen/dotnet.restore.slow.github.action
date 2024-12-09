@@ -23,14 +23,32 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-2019, windows-2022]
         include:
           - os: windows-2019
+            cache: false
             DOTNET_INSTALL_DIR: D:\dotnet
             NUGET_PACKAGES: D:\nuget\packages
           - os: windows-2022
+            cache: false
             DOTNET_INSTALL_DIR: D:\dotnet
             NUGET_PACKAGES: D:\nuget\packages
           - os: windows-2019
+            cache: true
+            DOTNET_INSTALL_DIR: D:\dotnet
+            NUGET_PACKAGES: D:\nuget\packages
+          - os: windows-2022
+            cache: true
+            DOTNET_INSTALL_DIR: D:\dotnet
+            NUGET_PACKAGES: D:\nuget\packages
+          - os: windows-2019
+            cache: false
             DOTNET_INSTALL_DIR: ''
           - os: windows-2022
+            cache: false
+            DOTNET_INSTALL_DIR: ''
+          - os: windows-2019
+            cache: true
+            DOTNET_INSTALL_DIR: ''
+          - os: windows-2022
+            cache: true
             DOTNET_INSTALL_DIR: ''
         cache: [true, false]
       fail-fast: false
