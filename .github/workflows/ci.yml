@@ -12,6 +12,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   POWERSHELL_TELEMETRY_OPTOUT: 1
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
   build:
@@ -20,7 +21,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-2019, windows-2022]
-        NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
         include:
           - os: windows-2019
             DOTNET_INSTALL_DIR: D:\dotnet
@@ -34,13 +34,18 @@ jobs:
             DOTNET_INSTALL_DIR: ''
         cache: [true, false]
       fail-fast: false
-    env:
-      NUGET_PACKAGES: ${{ matrix.NUGET_PACKAGES }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Set Windows Environment Variables
+        if: startsWith(matrix.os, 'windows') && matrix.DOTNET_INSTALL_DIR != ''
+        shell: pwsh
+        run: |
+          echo "DOTNET_INSTALL_DIR=${{ matrix.DOTNET_INSTALL_DIR }}" >> $ENV:GITHUB_ENV
+          echo "NUGET_PACKAGES=${{ matrix.NUGET_PACKAGES }}" >> $ENV:GITHUB_ENV
 
       - name: Cache NuGet packages
         if: matrix.cache
@@ -49,11 +54,6 @@ jobs:
           path: ${{ matrix.NUGET_PACKAGES }}
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: ${{ runner.os }}-nuget-
-
-      - name: Set Windows Environment Variables
-        if: startsWith(matrix.os, 'windows') && matrix.DOTNET_INSTALL_DIR != ''
-        shell: pwsh
-        run: echo "DOTNET_INSTALL_DIR=${{ matrix.DOTNET_INSTALL_DIR }}" >> $ENV:GITHUB_ENV
 
       - name: Setup DotNet 8
         uses: actions/setup-dotnet@v4
